@@ -1,0 +1,24 @@
+{
+  "name": "fso-gqlphonebook",
+  "version": "1.0.0",
+  "description": "Full Stack Open GraphQL Phonebook App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zenlex/fso-gqlphonebook.git"
+  },
+  "author": "Erich R. Keil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zenlex/fso-gqlphonebook/issues"
+  },
+  "homepage": "https://github.com/zenlex/fso-gqlphonebook#readme",
+  "dependencies": {
+    "apollo-server": "^3.6.3",
+    "apollo-server-core": "^3.6.3",
+    "graphql": "^16.3.0"
+  }
+}
