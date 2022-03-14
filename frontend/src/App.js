@@ -8,7 +8,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const result = useQuery(ALL_PERSONS);
-
+  console.log(result);
   if (result.loading) {
     return <div>loading...</div>;
   }
@@ -19,15 +19,17 @@ const App = () => {
       setErrorMessage(null);
     }, 10000);
   };
-
-  return (
-    <div>
-      <Notify errorMessage={errorMessage} />
-      <Persons persons={result.data.allPersons} />
-      <PersonForm setError={notify} />
-      <PhoneForm setError={notify} />
-    </div>
-  );
+  if (result.data) {
+    return (
+      <div>
+        <Notify errorMessage={errorMessage} />
+        <Persons persons={result.data.allPersons} />
+        <PersonForm setError={notify} />
+        <PhoneForm setError={notify} />
+      </div>
+    );
+  }
+  return <div>no data found...</div>;
 };
 
 const Notify = ({ errorMessage }) => {
