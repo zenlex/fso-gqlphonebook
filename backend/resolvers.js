@@ -1,58 +1,9 @@
 require('dotenv').config();
-const { gql, UserInputError } = require('apollo-server');
+const { UserInputError } = require('apollo-server');
 const { persons } = require('./dummydata');
 const Person = require('./models/person');
 const jwt = require('jsonwebtoken');
 const User = require('./models/user');
-
-const typeDefs = gql`
-  type Address {
-    street: String!
-    city: String!
-  }
-
-  type Person {
-    name: String!
-    phone: String
-    address: Address!
-    id: ID!
-  }
-
-  enum YesNo {
-    YES
-    NO
-  }
-
-  type Query {
-    personCount: Int!
-    allPersons(phone: YesNo): [Person!]!
-    findPerson(name: String!): Person
-    me: User
-  }
-
-  type User {
-    username: String!
-    friends: [Person!]!
-    id: ID!
-  }
-
-  type Token {
-    value: String!
-  }
-
-  type Mutation {
-    addPerson(
-      name: String!
-      phone: String
-      street: String!
-      city: String!
-    ): Person
-    editNumber(name: String!, phone: String!): Person
-    createUser(username: String!): User
-    login(username: String!, password: String!): Token
-    addAsFriend(name: String!): User
-  }
-`;
 
 const resolvers = {
   Query: {
@@ -69,6 +20,7 @@ const resolvers = {
       return context.currentUser;
     },
   },
+
   Person: {
     address: (root) => {
       return {
@@ -77,6 +29,7 @@ const resolvers = {
       };
     },
   },
+
   Mutation: {
     addPerson: async (root, args, context) => {
       const person = new Person({ ...args });
@@ -148,4 +101,4 @@ const resolvers = {
   },
 };
 
-module.exports = { typeDefs, resolvers };
+module.exports = resolvers;
