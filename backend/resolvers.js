@@ -11,11 +11,14 @@ const resolvers = {
   Query: {
     personCount: async () => Person.collection.countDocuments(),
     allPersons: async (root, args) => {
+      console.log('Person.find');
       if (!args.phone) {
-        return Person.find({});
+        return Person.find({}).populate('friendOf');
       }
 
-      return Person.find({ phone: { $exists: args.phone === 'YES' } });
+      return Person.find({ phone: { $exists: args.phone === 'YES' } }).populate(
+        'friendOf'
+      );
     },
     findPerson: async (root, args) => Person.findOne({ name: args.name }),
     me: (root, args, context) => {
@@ -30,16 +33,24 @@ const resolvers = {
         city: root.city,
       };
     },
+    // friendOf: async (root) => {
+    //   const friends = await User.find({
+    //     friends: { $in: [root._id] },
+    //   });
+    //   console.log('User.find');
+    //   return friends;
+    // },
   },
 
   Mutation: {
     addPerson: async (root, args, context) => {
-      const person = new Person({ ...args });
       const currentUser = context.currentUser;
-
       if (!currentUser) {
         throw new AuthenticationError('not authenticated');
       }
+
+      const person = new Person({ ...args });
+      person.friendOf = currentUser._id;
 
       try {
         await person.save();
