@@ -1,9 +1,11 @@
 require('dotenv').config();
-const { UserInputError } = require('apollo-server');
+const { UserInputError, AuthenticationError } = require('apollo-server');
 const { persons } = require('./dummydata');
 const Person = require('./models/person');
 const jwt = require('jsonwebtoken');
 const User = require('./models/user');
+const { PubSub } = require('graphql-subscriptions');
+const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
@@ -46,6 +48,8 @@ const resolvers = {
       } catch (err) {
         throw new UserInputError(err.message, { invalidArgs: args });
       }
+      pubsub.publish('PERSON_ADDED', { personAdded: person });
+
       return person;
     },
     editNumber: async (root, args) => {
@@ -97,6 +101,11 @@ const resolvers = {
       await currentUser.save();
 
       return currentUser;
+    },
+  },
+  Subscription: {
+    personAdded: {
+      subscribe: () => pubsub.asyncIterator(['PERSON_ADDED']),
     },
   },
 };
