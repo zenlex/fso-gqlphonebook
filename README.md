@@ -4,4 +4,5 @@
 - Apollo Server
 - MongoDB.
 
-Full Stack Open Curriculum - Work in progress. 
+Full Stack Open Curriculum Part 8 GraphQL Course
+
